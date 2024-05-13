@@ -1,0 +1,72 @@
+<html> <!--Html 開頭標籤 屬性 = "值"   屬性 = "值" 結尾標籤-->
+<head> 
+    <style>
+      /*CCS註解*/
+  /* 選擇器 {
+    屬性 = "值"; 要分號
+    屬性 = "值";
+  } 
+  顏色 : google color picker 可挑顏色
+
+  1) 英文名子
+
+  2) #色碼 #RRGGBB 00~FF 16進位
+
+  3) rgba(0~255,0~255,0~255,0~1) 前三是rgb三色 ,最後是透明度 可小數
+
+  4) rgb(0~255,0~255,0~255) 前三是rgb三色
+
+  5) hsl(色相0~360,彩度0~100%,亮度0~100%) 參考"色相環"
+
+  6) hsla() 同理
+  */
+
+    p { /*所有文字*/
+        color:black;
+    }
+    #NooB { /*針對那文字*/
+        font-size:20pt; /*大小*/
+    }
+    .c2 { /*針對在組裡的文字*/
+        background:#FFFF00;
+        color:red;
+        width: 100px;
+        height: 100px;
+        display: block; /*none , block , inline-block*/
+    }
+    #a1 {
+        border:10px yellow solid; /*寬度 , 顏色 , (soild實現, dashed虛線, dotted點點. double)雙線樣*/
+        border-right: dashed; /*(top right bottom left)右邊線*/
+    /*ex*/border-color: yellow;
+        border-style: soild double dashed dotted;/*寫1值 四邊 , 2 水平 垂直 , 3上 水平 下, 上右下*/ 
+        margin:0 10px;/*外邊界*/
+        padding:0 10px;/*內填充*/
+    }
+    #a2 {
+        border : 1px solid black;
+        width:100px;
+        height:0px;
+        border-radius: 20px 10px 10px 10px; /*從左開始, border的半徑 , 亦可用百分比 ex: 50%*/
+    }
+    #a3 {
+      width:0px;
+      height:100px;
+      border:50px solid black;
+      border-color:red blue green yellow; 
+      border-top-color: transparent;
+    }
+    </style>
+</head>
+<body>
+    <p id = "NooB">NOOB</p>
+    <p class="c2">NOOB</p>
+    <p class="c2">NOOB</p>
+    <p>NOOB</p>	
+    <br>
+    <div id= "a1" class= "c2">NOOB1</div>
+    <div id= "a1" class= "c2">NOOB2</div>
+    <span class= "c1">123</span>
+    <div id= "a2"></div>
+    <div id= "a3"></div>
+</body>
+</html>

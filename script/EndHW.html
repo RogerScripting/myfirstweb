@@ -1,0 +1,103 @@
+<html>
+  <head>
+    <style>
+      #grass {
+        width:600px;
+        height:600px;
+        background:url("pic/grass1.jpg");
+        position:relative;
+      }
+      #Human {
+        left:270px;
+        top: 270px;
+        position:relative;
+      }
+      #Humanoid {
+        width: 30px;
+        height: 30px;
+        border:3px #ab4f03 solid;
+        border-radius:50%;
+        background-color:#c7610e;
+        position:absolute;
+      }
+      #Zombie {
+        left:0px;
+        top: 0px;
+        width: 30px;
+        height: 30px;
+        border:3px #047021 solid;
+        border-radius:50%;
+        background-color:#109132;
+        position:absolute;
+      }
+    </style>
+    <script>
+      function get(id) {
+        return document.getElementById(id);
+      }
+      function gets(qs) {
+        return Array.from(document.querySelectorAll(qs));
+      }
+      function getRnd(min,max)  {
+        return Math.floor(Math.random() * (max - min + 1))+min;
+      }
+      function gameInit() {                                       
+        mydir = {"ArrowDown":0,"ArrowLeft":0,"ArrowRight":0,"ArrowUp":0};
+        character = {w:30,h:30,x:270,y:270};
+
+        setInterval(character_move,10);
+        setInterval(zombie_create,1000);
+      }
+      function mykeydown(ev) {
+        ev.preventDefault();
+        if(ev.key==" ") {
+          //
+        } else {
+          mydir[ev.key] = 1;
+        }
+      }
+      function mykeyup(ev) {
+        ev.preventDefault();
+        mydir[ev.key] = 0;
+      }
+      function character_move() {
+        if (mydir["ArrowDown"]) {
+          if (character.y + character.h < 590) {character.y++;}
+        } else if(mydir["ArrowLeft"]) {
+          if (character.x + character.w > 40) {character.x--;}
+        } else if(mydir["ArrowRight"]) {
+          if (character.x + character.w < 590) {character.x++;}
+        } else if(mydir["ArrowUp"]) {
+          if (character.y + character.h > 40) {character.y--;}
+        }
+        get("Human").style.left = character.x+"px";
+        get("Human").style.top = character.y+"px";
+      }
+      function zombie_create() {
+        var z=document.createElement("div");
+        z.id = "Zombie";
+        z.className = "Enemy";
+        z.w=30; z.h=30;
+        z.pos={x:getRnd(0,570),y:0};
+        z.style.left= z.pos.x+"px";
+        z.move = setInterval(zombie_move,10);
+        get("grass").appendChild(z);
+        
+        function zombie_move() {
+          var move = getRnd(0,1);
+          if (z.pos.y > 540 || z.pos.x < 0) {
+            //
+              return;
+          } 
+        }
+      }
+    </script>
+  </head>
+  <body onload = "gameInit();" onkeydown= "mykeydown(event);" onkeyup="mykeyup(event)">
+    <div id = "grass">
+      <div id = "Human">
+        <div id = "Humanoid"></div>
+      </div>
+    </div>
+  </body>
+</html>
