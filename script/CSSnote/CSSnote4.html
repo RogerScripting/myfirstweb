@@ -1,0 +1,44 @@
+<html>
+<head>
+  <style>
+      #d1 {
+          width:100px;
+          height:50px;
+          background:red;
+          position:relative;
+          top:100px; /*本體位置*/
+          left:100px;
+
+          /* transform:rotate(-45deg) ; */
+          /*transform:scale(0.5 , 3); */
+          /*transform:translate(-50px , -50px);*/ /*看起來在那位置,但他的本體在你預設的位置*/
+
+          transition:/*你要的函數或動作*/transform 1s; /*1s 代表做動作所需時間*/
+      }
+      #d1:hover { /*當碰到時*/
+          transform:translate(-50px , -50px) scale(0.5 , 3);/*如果做兩動作以上,就用空格來動作*/
+      }
+      #d2 {
+          width:100px;
+          height:50px;
+          background:red;
+          position:relative;
+          top:200px; /*本體位置*/
+          left:100px;
+
+          /* transform:rotate(-45deg) ; */
+          /*transform:scale(0.5 , 3); */
+          /*transform:translate(-50px , -50px);*/ /*看起來在那位置,但他的本體在你預設的位置*/
+      }
+      #d2:hover { /*當碰到時*/
+          transition:transform 1s;
+          transform:translate(-50px , -50px) ;/*如果做兩動作以上,就用空格來動作*/
+      }
+  </style>
+</head>
+<body>
+    <div id= "d1"></div>
+    transition放下與放上的差別
+    <div id= "d2"></div>
+</body>
+</html>
