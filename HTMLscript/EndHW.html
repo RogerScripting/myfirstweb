@@ -1,0 +1,260 @@
+<html>
+  <head>
+    <style>
+      #grass {
+        width:600px;
+        height:600px;
+        background:url("pic/grass1.jpg");
+        position:relative;
+      }
+      #Human {
+        left:270px;
+        top: 270px;
+        position:absolute;
+      }
+      #Humanoid {
+        rotate:0deg;
+        width: 30px;
+        height: 30px;
+        border:3px #ab4f03 solid;
+        border-radius:50%;
+        background-color:#c7610e;
+        position:absolute;
+      }
+      #Hand {
+        top: 2px;
+        left: 2px;
+        width: 30px;
+        height: 30px;
+        position:absolute;
+        rotate:0deg;
+      }
+      #HandLeft {
+        top: -10px;
+        left: 20px;
+        width: 10px;
+        height: 10px;
+        border:3px #ab4f03 solid;
+        border-radius:50%;
+        background-color:#c7610e;
+        position:absolute;
+      }
+      #HandRight {
+        top: -10px;
+        left: 7px;
+        width: 10px;
+        height: 10px;
+        border:3px #ab4f03 solid;
+        border-radius:50%;
+        background-color:#c7610e;
+        position:absolute;
+      }
+      #Sword {
+        position:absolute;
+        top:-20px;
+        left:-5;
+        width:60px;
+        height:60px;
+        rotate:43deg;
+        background:url("pic/Sword.png");
+      }
+      #Health {
+        width: 30px;
+        height: 0.1px;
+        border:3px #d40606 solid;
+        background-color:#d40606;
+        top: -10px;
+        position:absolute;
+      }
+      #Zombie {
+        left:0px;
+        top: 0px;
+        width: 30px;
+        height: 30px;
+        border:3px #047021 solid;
+        border-radius:50%;
+        background-color:#109132;
+        position:absolute;
+      }
+    </style>
+    <script>
+      function get(id) {
+        return document.getElementById(id);
+      }
+      function gets(qs) {
+        return Array.from(document.querySelectorAll(qs));
+      }
+      function getRnd(min,max)  {
+        return Math.floor(Math.random() * (max - min + 1))+min;
+      }
+      function gameInit() {                                       
+        mydir = {"ArrowDown":0,"ArrowLeft":0,"ArrowRight":0,"ArrowUp":0};
+        character = {w:30,h:30,x:270,y:270};
+        Human.id = "Human";
+        Health = 30;
+        SwordAngle = 0;
+        y_down = 0;
+        y_up = 0;
+        x_down = 0;
+        x_up = 0;
+        hitbox_Top = 0;
+        hitbox_Left = 0;
+        CM = setInterval(character_move,10);
+        ZC = setInterval(zombie_create1,1000);
+        SW = setInterval(sword_move,10);
+      }
+      function die(sth) {
+        clearInterval(sth.move);
+        sth.remove();
+      }
+      function health_down() {
+        Health -= 10;
+        get("Health").style.width = Health+"px";
+        if (Health == 0) {
+          Human.remove();
+          clearInterval(CM);
+          clearInterval(ZC);
+          alert("Game Over");
+        }
+      }
+      function mykeydown(ev) {
+        ev.preventDefault();
+        if(ev.key==" ") {
+          var rotate = 0;
+          var a = setInterval(function() {
+            rotate -= 5;   
+            get("Humanoid").style.rotate = rotate+"deg";
+            if (rotate == -90) {
+              clearInterval(a);
+              var b = setInterval(function() {
+                rotate += 5;
+                get("Humanoid").style.rotate = rotate+"deg";
+                if (rotate == 0) {
+                  clearInterval(b);
+                }
+              },0.1);
+            }
+          },0.1);
+        attack();
+        } else {
+          mydir[ev.key] = 1;
+        }
+      }
+      function attack() {
+        var b=document.createElement("img");
+        b.className = "hitbox"; 
+        b.w=3;b.h=5;
+        b.pos={x:character.x+(character.w/2)+hitbox_Left,y:character.y+15+hitbox_Top};
+        b.style.left=b.pos.x+"px";
+        b.move=setInterval(hitbox_move,10,b); 
+        get("grass").appendChild(b);
+      }
+      function hitbox_move(b) {
+        b.style.top = b.pos.y+"px";
+        setTimeout(function(){
+          die(b);
+        },100);
+        var hit=gets(".Enemy").filter(function(z){
+          return (z.pos.x < this.pos.x + 30) && 
+            (z.pos.x > this.pos.x + this.w - 60) &&
+            (z.pos.y > this.pos.y - 60) && (z.pos.y < this.pos.y + 30);
+        },b);
+        if (hit.length > 0) {
+          die(b);
+          hit.forEach(function(u){die(u);})
+        }
+      }
+      function mykeyup(ev) {
+        ev.preventDefault();
+        mydir[ev.key] = 0;
+      }
+      function sword_move() {
+        if (mydir["ArrowDown"]) {
+          y_down = -30;
+          hitbox_Top = 40;
+          hitbox_Left = 0;
+          SwordAngle = 180;
+        } else if(mydir["ArrowLeft"]) {
+          hitbox_Left = -40;
+          hitbox_Top = 0;
+          x_up = -30;
+          SwordAngle = 270;
+        } else if(mydir["ArrowRight"]) {
+          hitbox_Left = 40;
+          hitbox_Top = 0;
+          x_down = 30;
+          SwordAngle = 90;
+        } else if(mydir["ArrowUp"]) {
+          hitbox_Top = -40;
+          hitbox_Left = 0;
+          y_up = 30;
+          SwordAngle = 0;
+        }
+        get("Hand").style.rotate = SwordAngle+"deg";
+      }
+      function character_move() {
+        if (mydir["ArrowDown"]) {
+          if (character.y + character.h < 590) {character.y++;}
+        } else if(mydir["ArrowLeft"]) {
+          if (character.x + character.w > 40) {character.x--;}
+        } else if(mydir["ArrowRight"]) {
+          if (character.x + character.w < 590) {character.x++;}
+        } else if(mydir["ArrowUp"]) {
+          if (character.y + character.h > 40) {character.y--;}
+        }
+        get("Human").style.left = character.x+"px";
+        get("Human").style.top = character.y+"px";
+      }
+      function zombie_create1() {
+        var z =document.createElement("div");
+        z.id = "Zombie";
+        z.className = "Enemy";
+        z.w=30; z.h=30;
+        z.pos={x:getRnd(0,570),y:0};
+        z.style.left= z.pos.x+"px";
+        z.move = setInterval(zombie_move1,500);
+        get("grass").appendChild(z);
+        
+        function zombie_move1() {
+          var x = (z.pos.x - character.x)/40;
+          var y = (z.pos.y - character.y)/40;
+          z.pos.y -= y;
+          z.pos.x -= x;
+          z.style.left = z.pos.x+"px";
+          z.style.top = z.pos.y+"px";
+          var hit=gets(".Enemy").filter(function(z){ 
+            var x = z.pos.x - character.x;
+            var y = z.pos.y - character.y;
+            if (x < 0 && y > 0) {
+              x = -x;
+            } else if (x > 0 && y < 0) {
+              y = -y;
+            } else if (x < 0 && x < 0) {
+              x = -x; y = -y;
+            }
+            return (x < 30) && (y < 30);
+          },character);
+          if (hit.length > 0) {
+            hit.forEach(function(z){die(z);})
+            health_down();
+          }
+        }
+      }
+    </script>
+  </head>
+  <body onload = "gameInit();" onkeydown= "mykeydown(event);" onkeyup="mykeyup(event)">
+    <div id = "grass">
+      <div id = "Human">
+        <div id = "Humanoid">
+          <div id = "Hand">
+            <div id = "HandLeft">
+              <div id = "Sword"></div>
+            </div>
+            <div id ="HandRight"></div>
+          </div>
+        </div>
+        <div id = "Health"></div>
+      </div>
+    </div>
+  </body>
+</html>
